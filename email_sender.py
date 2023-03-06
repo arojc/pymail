@@ -7,15 +7,25 @@ import json
 
 class email_sender :
     def print_hi(self, name):
-        # Use a breakpoint in the code line below to debug your script.
         print(f'Hi, {name}')  # Press Ctrl+F8 to toggle the breakpoint.
 
     def get_settings(self):
-        settings_file = open("settings.txt", "r")
-        settings_string = settings_file.read()
-        settings_string = settings_string.replace('\n', ' ')
-        settings_dict = json.loads(settings_string)
+        try :
+            settings_file = open("settings.txt", "r")
+            settings_string = settings_file.read()
+            # settings_string = '{"EventCode": 6969, "Sender": "andraz.rojc@caretronic.com", "Receiver": "andraz.rojc@caretronic.com", "Password": "eynuipkdyqxkvhni"}'
+            settings_string = settings_string.replace('\n', ' ')
+            settings_dict = json.loads(settings_string)
+        except Exception as x:
+            error = x.args
+
         return settings_dict
+
+    def save_settings(self, settings_dict):
+        settings_file = open("settings.txt", "w")
+        settings_str = json.dumps(settings_dict)
+        settings_file.write(settings_str)
+
 
     def send_email(self):
         #email_sender = 'andraz.rojc@caretronic.com'
