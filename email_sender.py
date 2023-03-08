@@ -3,6 +3,7 @@ from email.message import EmailMessage
 import ssl
 import smtplib
 import json
+from common_variables import EvtLevel
 
 
 class email_sender :
@@ -27,7 +28,7 @@ class email_sender :
         settings_file.write(settings_str)
 
 
-    def send_email(self):
+    def send_email(self, id='', level='', task ='', N=0):
         #email_sender = 'andraz.rojc@caretronic.com'
         #email_password = 'eynuipkdyqxkvhni'
         #email_receiver = 'andraz.rojc@caretronic.com'
@@ -37,13 +38,13 @@ class email_sender :
         receiver = settings["Receiver"]
         password = settings["Password"]
 
-        subject = 'Poskus ' + datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        #subject = 'Poskus ' + datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         body = """To elektronsko pismo je poskusne narave. Vseeno nanj lahko odgovorite, v kolikor je odgovor prijazen :-)"""
 
         em = EmailMessage()
         em['From'] = sender
         em['To'] = receiver
-        em['Subject'] = subject
+        em['Subject'] = f"No of Args: {N} ID: {id} Level: {level} Task: {task}"
         em.set_content(body)
 
         context = ssl.create_default_context()

@@ -5,6 +5,8 @@ import wmi
 import json
 
 from PyQt5.QtWidgets import QApplication
+from trigger import trigger
+import winshell
 
 #import SEND_EMAIL
 from setup import Setup
@@ -17,7 +19,15 @@ from gui import gui
 
 
 if __name__ == '__main__':
-    app = QApplication(sys.argv)
-    g = gui()
-    g.show()
-    sys.exit(app.exec_())
+    #app = QApplication(sys.argv)
+    #g = gui()
+    #g.show()
+    #sys.exit(app.exec_())
+    d = winshell.desktop()
+
+    t = trigger()
+    t.trigger()
+
+
+
+
