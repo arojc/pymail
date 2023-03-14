@@ -15,6 +15,8 @@ class common_variables:
     es_receiver = 'Receiver'
     es_password = 'Password'
 
+    PATH = r"C:\Users\aandr\PycharmProjects\EventReader\\"
+
 class EvtLevel(Enum):
     LOG_ALWAYS = 0
     CRITICAL = 1

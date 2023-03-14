@@ -3,7 +3,7 @@ from email.message import EmailMessage
 import ssl
 import smtplib
 import json
-from common_variables import EvtLevel
+from common_variables import EvtLevel, common_variables as cv
 
 
 class email_sender :
@@ -11,8 +11,9 @@ class email_sender :
         print(f'Hi, {name}')  # Press Ctrl+F8 to toggle the breakpoint.
 
     def get_settings(self):
+        settings_dict = {}
         try :
-            settings_file = open("settings.txt", "r")
+            settings_file = open(cv.PATH + "settings.txt", "r")
             settings_string = settings_file.read()
             # settings_string = '{"EventCode": 6969, "Sender": "andraz.rojc@caretronic.com", "Receiver": "andraz.rojc@caretronic.com", "Password": "eynuipkdyqxkvhni"}'
             settings_string = settings_string.replace('\n', ' ')
@@ -28,7 +29,7 @@ class email_sender :
         settings_file.write(settings_str)
 
 
-    def send_email(self, id='', level='', task ='', N=0):
+    def send_email(self, dict):
         #email_sender = 'andraz.rojc@caretronic.com'
         #email_password = 'eynuipkdyqxkvhni'
         #email_receiver = 'andraz.rojc@caretronic.com'
@@ -44,8 +45,8 @@ class email_sender :
         em = EmailMessage()
         em['From'] = sender
         em['To'] = receiver
-        em['Subject'] = f"No of Args: {N} ID: {id} Level: {level} Task: {task}"
-        em.set_content(body)
+        em['Subject'] = "Poskus"
+        em.set_content(str(dict))
 
         context = ssl.create_default_context()
         with smtplib.SMTP_SSL('smtp.gmail.com', 465, context=context) as smtp:

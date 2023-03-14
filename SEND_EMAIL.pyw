@@ -3,12 +3,14 @@ import json
 
 from email_sender import email_sender
 
-def func(id, level, task, N):
+def func(dict):
     es = email_sender()
-    es.send_email(id, level, task, N)
+    es.send_email(dict)
 
 if __name__ == '__main__':
-    j = json()
-    func(sys.argv[0], sys.argv[1], sys.argv[2], len(sys.argv))
+    dict = {}
+    for i in range(len(sys.argv)):
+        dict[i] = sys.argv[i]
+    func(json.dumps(dict))
 
 #func()
