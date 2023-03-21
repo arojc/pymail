@@ -1,1 +1,0 @@
-{"EventCode": 6969, "Sender": "andraz.rojc@caretronic.com", "Receiver": "andraz.rojc@caretronic.com", "Password": "eynuipkdyqxkvhni"}

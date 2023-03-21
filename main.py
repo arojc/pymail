@@ -1,23 +1,10 @@
 #! py -3
+import os
 import sys
 
-import wmi
-import json
-
 from PyQt5.QtWidgets import QApplication
-#from trigger import trigger
-# import winshell
-import os
 
-#import SEND_EMAIL
-#from setup import Setup
-#import customtkinter
-#from gui_with_customtkinter import gui_with_customtkinter
-#from gui_with_QT import gui_with_QT, my_window, calculator
 from gui import gui
-
-
-
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
@@ -31,6 +18,15 @@ if __name__ == '__main__':
     #s = Setup()
     #s.setupTrigger()
     #s.deleteTrigger()
+
+    #os.system(f"test.bat")
+
+    # command = f"bat_scripts\\test.bat"
+    # process = subprocess.Popen(command, stdout=None, stderr=None, shell=False)
+    #output, error = process.communicate()
+    print(os.getcwd())
+
+
 
 
 

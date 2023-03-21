@@ -13,7 +13,7 @@ class email_sender :
     def get_settings(self):
         settings_dict = {}
         try :
-            settings_file = open(cv.PATH + "settings.txt", "r")
+            settings_file = open("txts/settings.txt", "r")
             settings_string = settings_file.read()
             # settings_string = '{"EventCode": 6969, "Sender": "andraz.rojc@caretronic.com", "Receiver": "andraz.rojc@caretronic.com", "Password": "eynuipkdyqxkvhni"}'
             settings_string = settings_string.replace('\n', ' ')
@@ -24,7 +24,7 @@ class email_sender :
         return settings_dict
 
     def save_settings(self, settings_dict):
-        settings_file = open("settings.txt", "w")
+        settings_file = open("txts/settings.txt", "w")
         settings_str = json.dumps(settings_dict)
         settings_file.write(settings_str)
 

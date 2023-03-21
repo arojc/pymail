@@ -1,38 +1,37 @@
+import os
 import sys
 from PyQt5 import QtWidgets
-from PyQt5.QtCore import pyqtSlot, Qt
+from PyQt5.QtCore import pyqtSlot, Qt, QSize
 from PyQt5.QtWidgets import QApplication, QMainWindow, QWidget, QVBoxLayout, QTabWidget, QPushButton, QGridLayout, \
     QHBoxLayout, QListWidget, QListWidgetItem
-from PyQt5.QtGui import QIcon
+from PyQt5.QtGui import QIcon, QPainter, QFont
+from PyQt5.uic.Compiler.qtproxies import QtCore
+
+from TriggerHandler import TriggerHandler
 from common_variables import common_variables
 from email_sender import email_sender
 from qtwidgets import PasswordEdit
+
+from XMLHandler import XMLHandler
+
 
 class gui(QMainWindow):
 
     def __init__(self):
         super().__init__()
-        # self.title = 'PyQt5 tabs - pythonspot.com'
-        # self.setWindowTitle(common_variables.top_left_text)
+
+        self.setToolTip("EventReader")
+        self.setWindowIcon(QIcon("icons/caretronic_logo.jpg"))
+        self.setWindowTitle(common_variables.top_left_text)
+
         self.left = 0
         self.top = 0
         self.width = 700
         self.height = 700
-        self.setWindowTitle(common_variables.top_left_text)
         self.setGeometry(self.left, self.top, self.width, self.height)
-        self.setToolTip("EventReader")
-        self.setWindowIcon(QIcon("caretronic_logo.jpg"))
 
         self.table_widget = MyTableWidget(self)
         self.setCentralWidget(self.table_widget)
-
-        es = email_sender()
-        settings = es.get_settings()
-        cv = common_variables()
-
-        self.table_widget.tab1.sender_textbox.setText(settings[cv.es_sender])
-        self.table_widget.tab1.receiver_textbox.setText(settings[cv.es_receiver])
-        self.table_widget.tab1.password_textbox.setText(settings[cv.es_password])
 
         self.show()
 
@@ -54,6 +53,8 @@ class MyTableWidget(QWidget):
         self.layout.addWidget(self.tabs)
         self.setLayout(self.layout)
 
+        self.tabs.setCurrentIndex(1)
+
     @pyqtSlot()
     def on_click(self):
         print("\n")
@@ -65,6 +66,10 @@ class SettingsTab(QWidget):
     def __init__(self, parent):
 
         super(QWidget, self).__init__(parent)
+
+        es = email_sender()
+        settings = es.get_settings()
+        cv = common_variables()
 
         self.layout = QGridLayout(self)
 
@@ -90,17 +95,17 @@ class SettingsTab(QWidget):
 
         #region lineedits
         self.sender_textbox = QtWidgets.QLineEdit(self)
-        self.sender_textbox.setText("textbox")
+        self.sender_textbox.setText(settings[cv.es_sender])
         self.sender_textbox.setFixedSize(common_variables.gui_textbox_width, common_variables.gui_label_heigth)
         self.layout.addWidget(self.sender_textbox, 1, 2)
 
         self.receiver_textbox = QtWidgets.QLineEdit(self)
-        self.receiver_textbox.setText("textbox")
+        self.receiver_textbox.setText(settings[cv.es_receiver])
         self.receiver_textbox.setFixedSize(common_variables.gui_textbox_width, common_variables.gui_label_heigth)
         self.layout.addWidget(self.receiver_textbox, 2, 2)
 
         self.password_textbox = PasswordEdit(self)
-        self.password_textbox.setText("textbox")
+        self.password_textbox.setText(settings[cv.es_password])
         self.password_textbox.setFixedSize(common_variables.gui_textbox_width, common_variables.gui_label_heigth)
         self.password_textbox.setEchoMode(QtWidgets.QLineEdit.Password)
         self.layout.addWidget(self.password_textbox, 3, 2)
@@ -176,10 +181,6 @@ class SettingsTab(QWidget):
 
         es.save_settings(settings_dict)
 
-        # self.saveOnlySender()
-        # self.saveOnlyReceiver()
-        # self.saveOnlyPassword()
-
     #endregion functions
 
     def saveIndividualSetting(self, key, value):
@@ -197,101 +198,176 @@ class SettingsTab(QWidget):
         self.receiver_textbox.setText(settings[cv.es_receiver])
         self.password_textbox.setText(settings[cv.es_password])
 
-
-
 class TriggersTab(QWidget):
 
     def __init__(self, parent):
 
         super(QWidget, self).__init__(parent)
 
+        self.list = QListWidget()
+
+        #region populate
+        # th = TriggerHandler()
+        # ts = th.getTriggers()
+        #
+        # self.list = QListWidget()
+        #
+        # x = QWidget()
+        #
+        # myFont = QFont()
+        # myFont.setPointSize(15)
+        #
+        # for i in ts:
+        #     triggerName = f"Trigger: {i['EventName']} {i['EventID']}"
+        #     item = QListWidgetItem(triggerName, self.list)
+        #     item.setSizeHint(QSize(0, 30))
+        #     item.setFont(myFont)
+        #     self.list.setItemWidget(item, x)
+        #endregion populate
+
         self.layout1 = QVBoxLayout()
         self.layout2 = QHBoxLayout()
 
+        self.populate()
+        self.list.itemClicked.connect(self.onItemClicked)
 
-        list = QListWidget()
+        # self.list.itemClicked.connect(self.onItemClicked)
 
-        self.layout4 = QHBoxLayout()
+        self.layout1.addWidget(self.list)
 
-        self.first_label = QtWidgets.QLabel()
-        self.first_label.setText('First item')
-        self.first_label.setFixedSize(common_variables.gui_label_width, common_variables.gui_label_heigth)
-        self.first_label.setAlignment(Qt.AlignCenter)
-        self.layout4.addWidget(self.first_label, Qt.AlignCenter)
-
-        self.first_button = QtWidgets.QPushButton()
-        self.first_button.setText("First Button")
-        #self.add_button.setFixedSize(common_variables.gui_button_width, common_variables.gui_label_heigth)
-        #self.sender_button.clicked.connect(self.saveOnlySender)
-        self.layout4.addWidget(self.first_button)
-
-        x = QWidget()
-        x.setLayout(self.layout4)
-
-        item = QListWidgetItem("Prvi predmet", list)
-
-        list.setItemWidget(item, x)
-
-        #list.addItem(item)
-
-        self.layout1.addWidget(list)
-
+        #region Add button
         self.add_button = QtWidgets.QPushButton(self)
         self.add_button.setText("Add")
-        #self.add_button.setFixedSize(common_variables.gui_button_width, common_variables.gui_label_heigth)
-        #self.sender_button.clicked.connect(self.saveOnlySender)
+        self.add_button.clicked.connect(self.onAddButtonClicked)
         self.layout2.addWidget(self.add_button)
+        #endregion Add button
 
-        self.delete_button = QtWidgets.QPushButton(self)
-        self.delete_button.setText("Delete")
-        #self.delete_button.setFixedSize(common_variables.gui_button_width, common_variables.gui_label_heigth)
-        # self.sender_button.clicked.connect(self.saveOnlySender)
-        self.layout2.addWidget(self.delete_button)
-
-        self.edit_button = QtWidgets.QPushButton(self)
-        self.edit_button.setText("Edit")
-        #self.delete_button.setFixedSize(common_variables.gui_button_width, common_variables.gui_label_heigth)
-        # self.sender_button.clicked.connect(self.saveOnlySender)
-        self.layout2.addWidget(self.edit_button)
+        # #region Delete button
+        # self.delete_button = QtWidgets.QPushButton(self)
+        # self.delete_button.setText("Delete")
+        # self.delete_button.clicked.connect(self.onItemClicked)
+        # self.layout2.addWidget(self.delete_button)
+        # #endregion Delete button
+        #
+        # #region Edit button
+        # self.edit_button = QtWidgets.QPushButton(self)
+        # self.edit_button.setText("Edit")
+        # self.edit_button.clicked.connect(self.onItemClicked)
+        # self.layout2.addWidget(self.edit_button)
+        # #endregion Edit button
 
         self.layout1.addLayout(self.layout2)
 
         self.setLayout(self.layout1)
 
+    def onItemClicked(self, item):
+
+        RowId = self.list.currentRow()
+
+        self.m = MyPopup(RowId, self, True)
+        self.m.show()
+
+    def onAddButtonClicked(self):
+
+        RowId = self.list.currentRow()
+
+        self.m = MyPopup(RowId, self, False)
+        self.m.show()
+
+    def populate(self):
+        th = TriggerHandler()
+        ts = th.getTriggers()
+
+        self.list.clear()
+
+        myFont = QFont()
+        myFont.setPointSize(15)
+
+        for i in ts:
+            triggerName = f"Trigger: {i['EventName']} {i['EventID']}"
+            self.list.addItem(triggerName)
+
+        #self.list.itemClicked.connect(self.onItemClicked)
 
 
-        #self.layout = QGridLayout(self)
+    def populate1(self, id, name):
+        triggerName = f"Trigger: {id} {name}"
+        self.list.addItem(triggerName)
 
-        #self.pushButton1 = QtWidgets.QPushButton(self)
-        #self.pushButton1.setText('Knof1')
-        #self.pushButton1.setFixedSize(200, 30)
-        #self.layout.addWidget(self.pushButton1, 1, 1)
+    def populate2(self, id, name):
+        selItems = self.list.selectedItems()
+        for i in selItems:
+            self.list.takeItem(self.list.row(i))
 
-        #self.pushButton2 = QtWidgets.QPushButton(self)
-        #self.pushButton2.setText('Knof2')
-        #self.pushButton2.setFixedSize(200, 30)
-        #self.layout.addWidget(self.pushButton2, 2, 2)
+class MyPopup(QWidget):
+    def __init__(self, rown, parentX, insertValues):
+        QWidget.__init__(self)
 
-        #self.setLayout(self.layout)
+        self.parentX = parentX
 
+        self.setWindowTitle("Trigger")
+        self.setWindowIcon(QIcon("icons/caretronic_logo.jpg"))
 
-class ListItem(QListWidgetItem):
-    def __init__(self, parent):
-        super(ListItem, self).__init__(parent)
+        self.layout = QGridLayout(self)
 
-        self.layout4 = QHBoxLayout()
+        #region labels
+        self.eventName_label = QtWidgets.QLabel(self)
+        self.eventName_label.setText('Event name:')
+        self.eventName_label.setFixedSize(common_variables.gui_label_width, common_variables.gui_label_heigth)
+        self.eventName_label.setAlignment(Qt.AlignCenter)
+        self.layout.addWidget(self.eventName_label, 1, 1, Qt.AlignCenter)
 
-        self.first_label = QtWidgets.QLabel()
-        self.first_label.setText('Sender:')
-        self.first_label.setFixedSize(common_variables.gui_label_width, common_variables.gui_label_heigth)
-        self.first_label.setAlignment(Qt.AlignCenter)
-        self.layout4.addWidget(self.first_label, Qt.AlignCenter)
+        self.eventID_label = QtWidgets.QLabel(self)
+        self.eventID_label.setText('Event ID:')
+        self.eventID_label.setFixedSize(common_variables.gui_label_width, common_variables.gui_label_heigth)
+        self.eventID_label.setAlignment(Qt.AlignCenter)
+        self.layout.addWidget(self.eventID_label, 2, 1)
+        #endregion labels
 
-        self.first_button = QtWidgets.QPushButton()
-        self.first_button.setText("Add")
-        #self.add_button.setFixedSize(common_variables.gui_button_width, common_variables.gui_label_heigth)
-        #self.sender_button.clicked.connect(self.saveOnlySender)
-        self.layout4.addWidget(self.first_button)
+        #region lineedits
+        self.eventName_textbox = QtWidgets.QLineEdit(self)
+        self.eventName_textbox.setFixedSize(common_variables.gui_textbox_width, common_variables.gui_label_heigth)
+        self.layout.addWidget(self.eventName_textbox, 1, 2)
+
+        self.eventID_textbox = QtWidgets.QLineEdit(self)
+        self.eventID_textbox.setFixedSize(common_variables.gui_textbox_width, common_variables.gui_label_heigth)
+        self.layout.addWidget(self.eventID_textbox, 2, 2)
+        #endregion lineedits
+
+        self.save_button = QtWidgets.QPushButton(self)
+        self.save_button.setText("Save")
+        self.save_button.setFixedSize(common_variables.gui_button_width, common_variables.gui_label_heigth)
+        self.save_button.clicked.connect(lambda: self.saveTrigger(self.eventID_textbox.text(), self.eventName_textbox.text()))
+        self.layout.addWidget(self.save_button, 4, 1)
+
+        self.delete_button = QtWidgets.QPushButton(self)
+        self.delete_button.setText("Delete")
+        self.delete_button.setFixedSize(common_variables.gui_button_width, common_variables.gui_label_heigth)
+        self.delete_button.clicked.connect(lambda: self.deleteTrigger(self.eventID_textbox.text(), self.eventName_textbox.text()))
+        self.layout.addWidget(self.delete_button, 4, 2)
+
+        self.eventID = self.eventID_textbox.text()
+        self.eventName = self.eventName_textbox.text()
+
+        if insertValues:
+            th = TriggerHandler()
+            ts = th.getTriggers()
+            t = ts[rown]
+            self.eventName_textbox.setText(t["EventName"])
+            self.eventID_textbox.setText(str(t["EventID"]))
+
+    def saveTrigger(self, id, name):
+        th = TriggerHandler()
+        th.deleteATrigger(self.eventID, self.eventName)
+        th.createATrigger(id, name)
+        self.parentX.populate()
+        self.close()
+
+    def deleteTrigger(self, id, name):
+        th = TriggerHandler()
+        th.deleteATrigger(id, name)
+        self.parentX.populate()
+        self.close()
 
 
 

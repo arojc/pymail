@@ -49,7 +49,7 @@ class gui_with_QT:
         win = QMainWindow()
         win.setGeometry(1200,300, 700, 700)
         win.setWindowTitle(common_variables.top_left_text)
-        win.setWindowIcon(QIcon("caretronic_logo.jpg"))
+        win.setWindowIcon(QIcon("icons/caretronic_logo.jpg"))
         win.setToolTip("EventReader")
         win.setToolTipDuration(1000)
 
@@ -63,7 +63,7 @@ class my_window(QMainWindow):
         self.setGeometry(1200, 300, 700, 700)
         self.setWindowTitle(common_variables.top_left_text)
         self.setToolTip("EventReader")
-        self.setWindowIcon(QIcon("caretronic_logo.jpg"))
+        self.setWindowIcon(QIcon("icons/caretronic_logo.jpg"))
         self.initUI()
 
     def initUI(self):
@@ -103,7 +103,7 @@ class calculator(QMainWindow):
         self.setGeometry(1200, 300, 700, 700)
         self.setWindowTitle(common_variables.top_left_text)
         self.setToolTip("EventReader")
-        self.setWindowIcon(QIcon("caretronic_logo.jpg"))
+        self.setWindowIcon(QIcon("icons/caretronic_logo.jpg"))
         self.initUI()
 
     def initUI(self):

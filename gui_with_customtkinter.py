@@ -32,6 +32,6 @@ class gui_with_customtkinter:
 
         root.mainloop()
 
-g = gui_with_customtkinter
+g = gui_with_customtkinter()
 g.gui()
 

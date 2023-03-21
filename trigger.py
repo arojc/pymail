@@ -3,9 +3,9 @@ import win32evtlogutil
 
 class trigger:
     def trigger(self):
-        DUMMY_DUMMY_APP_NAME = "EventReader"
-        DUMMY_EVENT_ID = 69
-        DUMMY_EVENT_CATEG = 420
+        DUMMY_DUMMY_APP_NAME = "Event"
+        DUMMY_EVENT_ID = 42
+        DUMMY_EVENT_CATEG = 42
         DUMMY_EVENT_STRS = ["Dummy event string {0:d}".format(item) for item in range(5)]
         DUMMY_EVENT_DATA = b"Dummy event_data"
 
