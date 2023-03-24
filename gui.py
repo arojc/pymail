@@ -284,10 +284,10 @@ class TriggersTab(QWidget):
         myFont.setPointSize(15)
 
         for i in ts:
-            triggerName = f"Trigger: {i['EventName']} {i['EventID']}"
-            self.list.addItem(triggerName)
-
-        #self.list.itemClicked.connect(self.onItemClicked)
+            triggerName = f"Trigger: {i['EventName']} {i['EventID']} {i['Receiver']}"
+            item = QListWidgetItem(triggerName)
+            item.setFont(myFont)
+            self.list.addItem(item)
 
 
     def populate1(self, id, name):
@@ -322,6 +322,12 @@ class MyPopup(QWidget):
         self.eventID_label.setFixedSize(common_variables.gui_label_width, common_variables.gui_label_heigth)
         self.eventID_label.setAlignment(Qt.AlignCenter)
         self.layout.addWidget(self.eventID_label, 2, 1)
+
+        self.receiver_label = QtWidgets.QLabel(self)
+        self.receiver_label.setText('Receiver:')
+        self.receiver_label.setFixedSize(common_variables.gui_label_width, common_variables.gui_label_heigth)
+        self.receiver_label.setAlignment(Qt.AlignCenter)
+        self.layout.addWidget(self.receiver_label, 3, 1)
         #endregion labels
 
         #region lineedits
@@ -332,12 +338,17 @@ class MyPopup(QWidget):
         self.eventID_textbox = QtWidgets.QLineEdit(self)
         self.eventID_textbox.setFixedSize(common_variables.gui_textbox_width, common_variables.gui_label_heigth)
         self.layout.addWidget(self.eventID_textbox, 2, 2)
+
+        self.receiver_textbox = QtWidgets.QLineEdit(self)
+        self.receiver_textbox.setFixedSize(common_variables.gui_textbox_width, common_variables.gui_label_heigth)
+        self.layout.addWidget(self.receiver_textbox, 3, 2)
         #endregion lineedits
 
         self.save_button = QtWidgets.QPushButton(self)
         self.save_button.setText("Save")
         self.save_button.setFixedSize(common_variables.gui_button_width, common_variables.gui_label_heigth)
-        self.save_button.clicked.connect(lambda: self.saveTrigger(self.eventID_textbox.text(), self.eventName_textbox.text()))
+        self.save_button.clicked.connect(lambda: self.saveTrigger(self.eventID_textbox.text(),
+                                                                  self.eventName_textbox.text(), self.receiver_textbox.text()))
         self.layout.addWidget(self.save_button, 4, 1)
 
         self.delete_button = QtWidgets.QPushButton(self)
@@ -355,11 +366,15 @@ class MyPopup(QWidget):
             t = ts[rown]
             self.eventName_textbox.setText(t["EventName"])
             self.eventID_textbox.setText(str(t["EventID"]))
+            self.receiver_textbox.setText(t["Receiver"])
 
-    def saveTrigger(self, id, name):
+            self.eventName = t["EventName"]
+            self.eventID = str(t["EventID"])
+
+    def saveTrigger(self, id, name, receiver):
         th = TriggerHandler()
         th.deleteATrigger(self.eventID, self.eventName)
-        th.createATrigger(id, name)
+        th.createATrigger(id, name, receiver)
         self.parentX.populate()
         self.close()
 

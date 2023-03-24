@@ -1,11 +1,10 @@
 import xml.etree.ElementTree as ET
 import re
+from common_variables import common_variables as cv
 
 
 class XMLHandler:
-    def createTriggetToImport(self, id, name):
-
-        #triggerDict = get_triggerss()
+    def createTriggetToImport(self, id, name, receiver):
 
         tree0 = ET.parse("xmls/Application_EventReader_71.xml")
         root0 = tree0.getroot()
@@ -38,20 +37,24 @@ class XMLHandler:
         for value in root.iter(f'{xmlns}Subscription'):
             value.text = tree1Txt
 
-        for e in root:
-            ET.register_namespace("", xmlns)
-            tree.write('trigger_temp.xml')
+        for x in root.iter(f"{xmlns}Actions"):
+            a = x[0]
+            b = a[1]
+            c = b.text
+            c = c + f" {receiver}"
+            x[0][1].text = c
+            pass
 
-        tree.write('trigger_temp.xml', xml_declaration=True, encoding="UTF-16", method="xml")
+        tree.write(cv.temp_trigger_path, xml_declaration=True, encoding="UTF-16", method="xml")
 
 
-        f = open('xmls/trigger_temp.xml', 'r', encoding='UTF-16')
+        f = open(cv.temp_trigger_path, 'r', encoding='UTF-16')
         xmlTxt = f.read()
         f.close()
 
-        open('xmls/trigger_temp.xml', 'w').close()
+        open(cv.temp_trigger_path, 'w').close()
 
-        f = open('xmls/trigger_temp.xml', 'w', encoding='UTF-16')
+        f = open(cv.temp_trigger_path, 'w', encoding='UTF-16')
         xmlTxt = xmlTxt.replace(':ns0', '')
         xmlTxt = xmlTxt.replace('ns0:', '')
         f.write(xmlTxt)

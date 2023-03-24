@@ -11,6 +11,7 @@ if __name__ == '__main__':
     dict = {}
     for i in range(len(sys.argv)):
         dict[i] = sys.argv[i]
-    func(json.dumps(dict))
+    #func(json.dumps(dict))
+    func(dict)
 
 #func()

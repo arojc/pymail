@@ -19,6 +19,8 @@ class common_variables:
 
     PATH = r"C:\Users\aandr\PycharmProjects\EventReader\\"
 
+    temp_trigger_path = 'xmls/trigger_temp.xml'
+
 
 class EvtLevel(Enum):
     LOG_ALWAYS = 0

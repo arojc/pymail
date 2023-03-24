@@ -1,4 +1,4 @@
-@ schtasks /create /TN %1 /XML trigger_temp.xml
+@ schtasks /create /TN %1 /XML xmls\trigger_temp.xml
 ::pause
 
 

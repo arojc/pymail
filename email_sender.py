@@ -37,6 +37,7 @@ class email_sender :
         settings = self.get_settings()
         sender = settings["Sender"]
         receiver = settings["Receiver"]
+        receiver = dict[6]
         password = settings["Password"]
 
         #subject = 'Poskus ' + datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
@@ -46,7 +47,7 @@ class email_sender :
         em['From'] = sender
         em['To'] = receiver
         em['Subject'] = "Poskus"
-        em.set_content(str(dict))
+        em.set_content(dict[6])
 
         context = ssl.create_default_context()
         with smtplib.SMTP_SSL('smtp.gmail.com', 465, context=context) as smtp:

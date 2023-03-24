@@ -9,14 +9,14 @@ from XMLHandler import XMLHandler
 
 class TriggerHandler:
 
-    def createATrigger(self, id, name):
+    def createATrigger(self, id, name, receiver):
         x = XMLHandler()
-        x.createTriggetToImport(id, name)
+        x.createTriggetToImport(id, name, receiver)
         triggerName = f"TestingTasks\\Trigger_{id}_{name}"
         self.importTrigger(triggerName)
 
         triggerList = self.getTriggers()
-        triggerList.append({"EventID": id, "EventName": name, "Receiver": "nekdo@pac.si"})
+        triggerList.append({"EventID": id, "EventName": name, "Receiver": receiver})
         self.save_triggers(triggerList)
 
     def deleteATrigger(self, id, name):
@@ -29,7 +29,6 @@ class TriggerHandler:
             xname = item["EventName"]
             if(xid == id and xname == name):
                 triggerList.remove(item)
-        #triggerList.append({"EventID": id, "EventName": name, "Receiver": "nekdo@pac.si"})
         self.save_triggers(triggerList)
 
 
@@ -82,8 +81,8 @@ class TriggerHandler:
 
         self.save_triggers(triggers_list)
 
-th = TriggerHandler()
-th.checkForTrigger("TestingTasks\\Task71")
+#th = TriggerHandler()
+#th.checkForTrigger("TestingTasks\\Task71")
 
 #pass
 #l = th.getTriggers()

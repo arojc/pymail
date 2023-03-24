@@ -1,1 +1,1 @@
-[{"EventID": "42", "EventName": "Event", "Receiver": "nekdo@pac.si"}]
+[{"EventID": "88", "EventName": "ERTService", "Receiver": "ales@caretronic.com"}]
