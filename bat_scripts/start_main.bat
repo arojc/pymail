@@ -2,5 +2,4 @@
 @ cd /D ..
 ::@ echo %cd%
 
-@ python.exe main.py
-@ pause
+@ python.exe main.pyw

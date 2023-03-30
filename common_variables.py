@@ -15,24 +15,30 @@ class common_variables:
     es_receiver = 'Receiver'
     es_password = 'Password'
 
-    #PATH = "Path"
+    temp_trigger_path = 'xmls\\trigger_temp.xml'
+    blueprint_trigger_path = 'xmls\\trigger_blueprint.xml'
 
-    PATH = r"C:\Users\aandr\PycharmProjects\EventReader\\"
+    settings_path = "txts\\settings.txt"
+    trigger_list_path = "txts\\triggers.txt"
 
-    temp_trigger_path = 'xmls/trigger_temp.xml'
+    icon_path = "icons\\caretronic_logo.jpg"
+    skull_icon_path = "icons\\skull.ico"
+
+    triggers_path = "TestingTasks"
+
+    start_main_path = "bat_scripts\\start_main.bat"
+    import_task = "bat_scripts\\import_the_task.bat"
+    remove_task = "bat_scripts\\remove_the_task.bat"
+    check_task = "bat_scripts\\check_the_task.bat"
+
+    trigger_event_name = "EventName"
+    trigger_event_id = "EventID"
+    trigger_receiver = "Receiver"
+
+    gui_tooltip = "EventReader"
+
+    event_reader = "EVENT_READER.lnk"
 
 
-class EvtLevel(Enum):
-    LOG_ALWAYS = 0
-    CRITICAL = 1
-    ERROR = 2
-    WARNING = 3
-    INFORMATIONAL = 4
-    VERBOSE = 5
-    SIEG_HEIL=88
-
-    @classmethod
-    def _missing_(cls, value):
-        return cls.SIEG_HEIL
 
 

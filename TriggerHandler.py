@@ -1,50 +1,70 @@
 import json
 import os
+import inspect
 import subprocess
-
+from trigger import trigger
 from common_variables import common_variables as cv
-from data_models.TriggerList import Trigger
 from XMLHandler import XMLHandler
 
 
 class TriggerHandler:
 
-    def createATrigger(self, id, name, receiver):
-        x = XMLHandler()
-        x.createTriggetToImport(id, name, receiver)
-        triggerName = f"TestingTasks\\Trigger_{id}_{name}"
-        self.importTrigger(triggerName)
+    # def __init__(self):
+        # self.t = trigger()
+        # self.t.logInfo(18, f"Starting function {inspect.stack()[0][3]}")
 
+
+    def createATrigger(self, id, name, receiver):
+
+        # self.t.logInfo(19, f"Starting function {inspect.stack()[0][3]}")
+
+        x = XMLHandler()
+        x.createTriggerToImport(id, name, receiver)
+        triggerName = f"{cv.triggers_path}\\Trigger_{id}_{name}"
+        self.importTrigger(triggerName)
         triggerList = self.getTriggers()
-        triggerList.append({"EventID": id, "EventName": name, "Receiver": receiver})
+        triggerList.append({cv.trigger_event_id: id, cv.trigger_event_name: name, cv.trigger_receiver: receiver})
         self.save_triggers(triggerList)
 
+
     def deleteATrigger(self, id, name):
-        triggerName = f"TestingTasks\\Trigger_{id}_{name}"
+
+        # self.t.logInfo(20, f"Starting function {inspect.stack()[0][3]}")
+
+        triggerName = f"{cv.triggers_path}\\Trigger_{id}_{name}"
         self.removeTrigger(triggerName)
 
         triggerList = self.getTriggers()
         for item in triggerList:
-            xid = item["EventID"]
-            xname = item["EventName"]
+            xid = item[cv.trigger_event_id]
+            xname = item[cv.trigger_event_name]
             if(xid == id and xname == name):
                 triggerList.remove(item)
         self.save_triggers(triggerList)
 
 
     def importTrigger(self, taskName):
+
+        # self.t.logInfo(21, f"Starting function {inspect.stack()[0][3]}")
+
         self.removeTrigger(taskName)
-        command = f"bat_scripts\\import_the_task.bat {taskName}"
+        command = f"{cv.import_task} {taskName}"
         subprocess.Popen(command, stdout=None, stderr=subprocess.PIPE, shell=False)
 
 
     def removeTrigger(self, taskName):
+
+        # self.t.logInfo(22, f"Starting function {inspect.stack()[0][3]}")
+
         if(self.checkForTrigger(taskName)) :
-            command = f"bat_scripts\\remove_the_task.bat {taskName}"
+            command = f"{cv.remove_task} {taskName}"
             subprocess.Popen(command, stdout=None, stderr=subprocess.PIPE, shell=False)
 
     def checkForTrigger(self, taskName):
-        command = f"bat_scripts\\check_the_task.bat {taskName}"
+
+        # self.t.logInfo(23, f"Starting function {inspect.stack()[0][3]}")
+
+        command = f"{cv.check_task} {taskName}"
         process = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=False)
         output, error = process.communicate()
         le = len(error)
@@ -53,39 +73,29 @@ class TriggerHandler:
 
 
     def save_triggers(self, triggers_list):
-        with open("txts\\triggers.txt", "w") as f:
-            json.dump(triggers_list, f)
+
+        # self.t.logInfo(24, f"Starting function {inspect.stack()[0][3]}")
+
+        try:
+            with open(cv.trigger_list_path, "w") as f:
+                json.dump(triggers_list, f)
+        except Exception as x:
+            self.t.logError(6, x.args)
 
 
     def getTriggers(self):
+
+        # self.t.logInfo(25, f"Starting function {inspect.stack()[0][3]}")
+
         triggers_list = []
         try :
-            triggers_file = open("txts\\triggers.txt", "r")
+            triggers_file = open(cv.trigger_list_path, "r")
             triggers_string = triggers_file.read()
             triggers_list = json.loads(triggers_string)
             triggers_file.close()
         except Exception as x:
-            error = x.args
+            self.t.logError(7, "Error in function TriggerHandler.getTriggers()")
 
         return triggers_list
 
 
-    def createTriggers(self):
-        triggers_list = []
-        for i in range(5):
-            trigger = {}
-            trigger["EventID"] = i
-            trigger["EventName"] = "Event"
-            trigger["Receiver"] = "nekdo@pac.si"
-            triggers_list.append(trigger)
-
-        self.save_triggers(triggers_list)
-
-#th = TriggerHandler()
-#th.checkForTrigger("TestingTasks\\Task71")
-
-#pass
-#l = th.getTriggers()
-#l.pop(1)
-#th.save_triggers(l)
-#pass
