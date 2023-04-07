@@ -1,14 +1,15 @@
 import sys
 import inspect
 
-from trigger import trigger
+#from trigger import trigger
 from email_sender import email_sender
 
 def func(dict):
+    pass
 
-    if False:
-        t = trigger()
-        t.logInfo(50, f"Starting function {inspect.stack()[0][3]}")
+    # if False:
+    #     t = trigger()
+    #     t.logInfo(50, f"Starting function {inspect.stack()[0][3]}")
 
     es = email_sender()
     es.send_email(dict)

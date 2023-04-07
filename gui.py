@@ -1,6 +1,8 @@
 import os
 import sys
 import inspect
+import time
+
 from PyQt5 import QtWidgets
 from PyQt5.QtCore import pyqtSlot, Qt, QSize
 from PyQt5.QtWidgets import QApplication, QMainWindow, QWidget, QVBoxLayout, QTabWidget, QPushButton, QGridLayout, \
@@ -284,7 +286,7 @@ class TriggersTab(QWidget):
         # self.t.logInfo(14, f"Starting function {inspect.stack()[0][3]}")
 
         th = TriggerHandler()
-        ts = th.getTriggers()
+        ts = th.getItems()
 
         self.list.clear()
 
@@ -299,11 +301,8 @@ class TriggersTab(QWidget):
 
 
 class MyPopup(QWidget):
-    def __init__(self, rown, parentX, insertValues):
+    def __init__(self, rown, parentX, existingTrigger):
         QWidget.__init__(self)
-
-        # self.t = trigger()
-        # self.t.logInfo(15, f"Starting function {inspect.stack()[0][3]}")
 
         self.parentX = parentX
 
@@ -349,50 +348,90 @@ class MyPopup(QWidget):
         self.save_button = QtWidgets.QPushButton(self)
         self.save_button.setText("Save")
         self.save_button.setFixedSize(cv.gui_button_width, cv.gui_label_heigth)
-        self.save_button.clicked.connect(lambda: self.saveTrigger(self.eventID_textbox.text(),
-                                                                  self.eventName_textbox.text(), self.receiver_textbox.text()))
+        self.save_button.clicked.connect(lambda: self.saveTrigger(existingTrigger))
         self.layout.addWidget(self.save_button, 4, 1)
 
         self.delete_button = QtWidgets.QPushButton(self)
         self.delete_button.setText("Delete")
         self.delete_button.setFixedSize(cv.gui_button_width, cv.gui_label_heigth)
-        self.delete_button.clicked.connect(lambda: self.deleteTrigger(self.eventID_textbox.text(), self.eventName_textbox.text()))
+        self.delete_button.clicked.connect(lambda: self.deleteTrigger())
         self.layout.addWidget(self.delete_button, 4, 2)
 
         self.eventID = self.eventID_textbox.text()
         self.eventName = self.eventName_textbox.text()
 
-        if insertValues:
+        if existingTrigger:
             th = TriggerHandler()
-            ts = th.getTriggers()
+            ts = th.getItems()
             t = ts[rown]
             self.eventName_textbox.setText(t[cv.trigger_event_name])
             self.eventID_textbox.setText(str(t[cv.trigger_event_id]))
             self.receiver_textbox.setText(t[cv.trigger_receiver])
 
             self.eventName = t[cv.trigger_event_name]
-            self.eventID = str(t[cv.trigger_event_id])
+            self.eventID = t[cv.trigger_event_id]
+            pass
 
-    def saveTrigger(self, id, name, receiver):
+    def saveTrigger(self, existingTrigger):
+        input = self.getInput()
 
-        # self.t = trigger()
-        # self.t.logInfo(16, f"Starting function {inspect.stack()[0][3]}")
+        if(not input[3]):
+            return
+
+        name = input[0]
+        id = input[1]
+        receiver = input[2]
 
         th = TriggerHandler()
-        #th.deleteATrigger(self.eventID, self.eventName)
-        th.createATrigger(id, name, receiver)
+        if existingTrigger:
+            th.deleteATriggerItem(self.eventID, self.eventName)
+        th.createATriggerItem(id, name, receiver)
         self.parentX.populate()
         self.close()
 
-    def deleteTrigger(self, id, name):
-
-        # self.t = trigger()
-        # self.t.logInfo(17, f"Starting function {inspect.stack()[0][3]}")
+    def deleteTrigger(self):
 
         th = TriggerHandler()
-        th.deleteATrigger(id, name)
+        th.deleteATriggerItem(self.eventID, self.eventName)
         self.parentX.populate()
         self.close()
+
+    def getInput(self):
+        id = 0
+        isValid = True
+
+        try:
+            id = int(self.eventID_textbox.text())
+        except Exception as x:
+            isValid = False
+
+        name = self.eventName_textbox.text()
+        if(len(name) == 0):
+            isValid = False
+
+        receiver = self.receiver_textbox.text()
+        if(len(receiver) == 0):
+            isValid = False
+
+        if not isValid:
+            self.blink()
+
+        return name, id, receiver, isValid
+
+    def blink(self):
+        command1 = f"background-color: {cv.gui_color_1};"
+        command2 = f"background-color: {cv.gui_color_2};"
+        for x in range(3):
+            self.eventID_textbox.setStyleSheet(command1)
+            self.eventName_textbox.setStyleSheet(command1)
+            self.receiver_textbox.setStyleSheet(command1)
+            self.repaint()
+            time.sleep(0.5)
+            self.eventID_textbox.setStyleSheet(command2)
+            self.eventName_textbox.setStyleSheet(command2)
+            self.receiver_textbox.setStyleSheet(command2)
+            self.repaint()
+            time.sleep(0.5)
 
 
 

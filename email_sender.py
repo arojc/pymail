@@ -1,3 +1,4 @@
+import os
 from email.message import EmailMessage
 import ssl
 import smtplib
@@ -17,15 +18,15 @@ class email_sender :
 
     def get_settings(self):
 
-        self.t = trigger()
-        self.t.logInfo(29, f"Starting function {inspect.stack()[0][3]}")
+        # self.t = trigger()
+        # self.t.logInfo(29, f"Starting function {inspect.stack()[0][3]}")
 
         settings_dict = {}
         try :
-            settings_file = open(cv.settings_path, "r")
-            settings_string = settings_file.read()
-            settings_string = settings_string.replace('\n', ' ')
-            settings_dict = json.loads(settings_string)
+            with open(cv.settings_path, "r") as settings_file:
+                settings_string = settings_file.read()
+                settings_string = settings_string.replace('\n', ' ')
+                settings_dict = json.loads(settings_string)
         except Exception as x:
             t = trigger()
             t.logError(3, f"Error in function email_sender.get_settings() {x.args}")
@@ -38,17 +39,14 @@ class email_sender :
         self.t.logInfo(30, f"Starting function {inspect.stack()[0][3]}")
 
         try:
-            settings_file = open(cv.settings_path, "w")
-            settings_str = json.dumps(settings_dict)
-            settings_file.write(settings_str)
+            with open(cv.settings_path, "w") as settings_file:
+                settings_str = json.dumps(settings_dict)
+                settings_file.write(settings_str)
         except Exception as x:
             t = trigger()
             t.logError(4, "Error in function email_sender.save_settings()")
 
-
-
-
-    def send_email(self, dict):
+    def send_email(self, list):
 
         self.t = trigger()
         self.t.logInfo(31, f"Starting function {inspect.stack()[0][3]}")
@@ -59,20 +57,18 @@ class email_sender :
 
         settings = self.get_settings()
 
-        print(settings)
-
         self.t.logInfo(51, f"Starting function {settings}")
 
-        sender = settings["Sender"]
-        receiver = dict[6]
-        password = settings["Password"]
+        sender = settings[cv.es_sender]
+        receiver = list[6]
+        password = settings[cv.es_password]
 
         body = """To elektronsko pismo je poskusne narave. Vseeno nanj lahko odgovorite, v kolikor je odgovor prijazen :-)"""
 
         em = EmailMessage()
         em['From'] = sender
         em['To'] = receiver
-        em['Subject'] = f"Dogodek {dict[5]} {dict[3]}"
+        em['Subject'] = f"Dogodek {list[5]} {list[3]}"
         em.set_content(body)
 
         try:

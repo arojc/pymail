@@ -11,6 +11,9 @@ class common_variables:
     gui_button_width = 200
     gui_bottom_button_heigth = 60
 
+    gui_color_1 = "red"
+    gui_color_2 = "white"
+
     es_sender = 'Sender'
     es_receiver = 'Receiver'
     es_password = 'Password'
@@ -18,7 +21,7 @@ class common_variables:
     temp_trigger_path = 'xmls\\trigger_temp.xml'
     blueprint_trigger_path = 'xmls\\trigger_blueprint.xml'
 
-    settings_path = "txts\\settings.txt"
+    settings_path = "txts\settings.txt"
     trigger_list_path = "txts\\triggers.txt"
 
     icon_path = "icons\\caretronic_logo.jpg"

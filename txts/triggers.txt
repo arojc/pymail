@@ -1,1 +1,1 @@
-[{"EventID": "88", "EventName": "ERTService", "Receiver": "andraz.rojc@caretronic.com"}, {"EventID": "44", "EventName": "t", "Receiver": "w"}, {"EventID": "1068", "EventName": "hhhhh", "Receiver": "jo"}, {"EventID": "55", "EventName": "Event", "Receiver": "a"}, {"EventID": "55", "EventName": "Event", "Receiver": "andraz.rojc@caretronic.com"}, {"EventID": "44", "EventName": "DogodekA", "Receiver": "andraz.rojc@caretronic.com"}]
+[{"EventID": 12, "EventName": "Event", "Receiver": "andraz.rojc@caretronic.com"}]

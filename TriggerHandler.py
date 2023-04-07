@@ -9,43 +9,39 @@ from XMLHandler import XMLHandler
 
 class TriggerHandler:
 
-    # def __init__(self):
-        # self.t = trigger()
-        # self.t.logInfo(18, f"Starting function {inspect.stack()[0][3]}")
 
+    def createATriggerItem(self, id, name, receiver):
 
-    def createATrigger(self, id, name, receiver):
-
-        # self.t.logInfo(19, f"Starting function {inspect.stack()[0][3]}")
+        self.deleteATriggerItem(id, name)
 
         x = XMLHandler()
         x.createTriggerToImport(id, name, receiver)
         triggerName = f"{cv.triggers_path}\\Trigger_{id}_{name}"
+
         self.importTrigger(triggerName)
-        triggerList = self.getTriggers()
+        triggerList = self.getItems()
+
+        # trigger = next((t for t in triggerList if (t[cv.trigger_event_id] == id and t[cv.trigger_event_name] == name)), None)
+        # if trigger == None:
         triggerList.append({cv.trigger_event_id: id, cv.trigger_event_name: name, cv.trigger_receiver: receiver})
-        self.save_triggers(triggerList)
+        self.saveItems(triggerList)
 
 
-    def deleteATrigger(self, id, name):
-
-        # self.t.logInfo(20, f"Starting function {inspect.stack()[0][3]}")
+    def deleteATriggerItem(self, id, name):
 
         triggerName = f"{cv.triggers_path}\\Trigger_{id}_{name}"
         self.removeTrigger(triggerName)
 
-        triggerList = self.getTriggers()
-        for item in triggerList:
+        itemList = self.getItems()
+        for item in itemList:
             xid = item[cv.trigger_event_id]
             xname = item[cv.trigger_event_name]
             if(xid == id and xname == name):
-                triggerList.remove(item)
-        self.save_triggers(triggerList)
+                itemList.remove(item)
+        self.saveItems(itemList)
 
 
     def importTrigger(self, taskName):
-
-        # self.t.logInfo(21, f"Starting function {inspect.stack()[0][3]}")
 
         self.removeTrigger(taskName)
         command = f"{cv.import_task} {taskName}"
@@ -54,15 +50,11 @@ class TriggerHandler:
 
     def removeTrigger(self, taskName):
 
-        # self.t.logInfo(22, f"Starting function {inspect.stack()[0][3]}")
-
         if(self.checkForTrigger(taskName)) :
             command = f"{cv.remove_task} {taskName}"
             subprocess.Popen(command, stdout=None, stderr=subprocess.PIPE, shell=False)
 
     def checkForTrigger(self, taskName):
-
-        # self.t.logInfo(23, f"Starting function {inspect.stack()[0][3]}")
 
         command = f"{cv.check_task} {taskName}"
         process = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=False)
@@ -72,9 +64,7 @@ class TriggerHandler:
         return le <= 0
 
 
-    def save_triggers(self, triggers_list):
-
-        # self.t.logInfo(24, f"Starting function {inspect.stack()[0][3]}")
+    def saveItems(self, triggers_list):
 
         try:
             with open(cv.trigger_list_path, "w") as f:
@@ -83,9 +73,7 @@ class TriggerHandler:
             self.t.logError(6, x.args)
 
 
-    def getTriggers(self):
-
-        # self.t.logInfo(25, f"Starting function {inspect.stack()[0][3]}")
+    def getItems(self):
 
         triggers_list = []
         try :

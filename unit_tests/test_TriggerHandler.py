@@ -25,9 +25,9 @@ class TestTriggerHandler(TestCase):
         triggerList = [newTrigger]
 
         t = TriggerHandler()
-        t.save_triggers(triggerList)
+        t.saveItems(triggerList)
 
-        list = t.getTriggers()
+        list = t.getItems()
         for item in list:
             if item[cv.trigger_event_id] == newTrigger[cv.trigger_event_id] and item[cv.trigger_event_name] == newTrigger[cv.trigger_event_name] :
                 assert True
@@ -37,6 +37,6 @@ class TestTriggerHandler(TestCase):
 
     def test_get_triggers(self):
         t = TriggerHandler()
-        l = t.getTriggers()
+        l = t.getItems()
 
         self.assertTrue(len(l)>0)
